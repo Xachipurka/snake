@@ -1,10 +1,10 @@
 import random
 import pygame
 import time
-
+score = 0
 pygame.init()
 #
-screen = pygame.display.set_mode((470, 470))
+screen = pygame.display.set_mode((470, 500))
 
 running = True
 
@@ -50,19 +50,24 @@ while running:
         for i in range(1, len(snake)):
             if headX == snake[i][0] and headY == snake[i][1]:
                 running = False
+        score += 0.5
         time1 += 0.5
 
     if headX < 0 or headY < 0 or headX > 9 or headY > 9:
         running = False
     if headX == appleX and headY == appleY:
-        appleX = random.randrange(10)
-        appleY = random.randrange(10)
+        score += 3
+        while True:
+            appleX = random.randrange(10)
+            appleY = random.randrange(10)
+            for i in range(len(snake)):
+                if appleX == snake[i][0] and appleY == snake[i][1]:
+                    break
+            else:
+                break
+
     screen.fill((0, 0, 0)) # закрасить экран белым цветом
 
-
-    #pygame.draw.rect(screen, (0, 0, 0,), (100, 300, 50, 50))
-    #pygame.draw.rect(screen, [0, 0, 0], [155, 300, 50, 50])
-    #pygame.draw.rect(screen, [0, 0, 0], [210, 300, 50, 50])
     for y in range(10):
         for x in range(10):
             pygame.draw.rect(screen, (0, 255, 255,), (x * 47, y * 47, 45, 45))
@@ -71,9 +76,11 @@ while running:
         pygame.draw.rect(screen, (0, 255, 0,), (x * 47, y * 47, 45, 45))
     pygame.draw.rect(screen,  (255, 0, 0), (appleX * 47, appleY * 47, 45, 45))
 
+    font = pygame.font.Font(None, 36)
+    text = font.render(f'Score: {score}', True, (255, 255, 255))
+    screen.blit(text, (0, 470))
 
 
     pygame.display.flip()
 
 pygame.quit()
-
